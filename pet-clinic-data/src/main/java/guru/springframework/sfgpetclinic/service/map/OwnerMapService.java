@@ -2,12 +2,15 @@ package guru.springframework.sfgpetclinic.service.map;
 
 import guru.springframework.sfgpetclinic.model.Owner;
 import guru.springframework.sfgpetclinic.service.OwnerService;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class OwnerMapService extends AbstractMapService<Owner, Long> implements OwnerService {
+@Service
+public class OwnerMapService extends AbstractMapService<Owner, Long> implements OwnerService  {
     private Map<Long, Owner> map = super.map;
 
     @Override
