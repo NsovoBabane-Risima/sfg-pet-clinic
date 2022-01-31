@@ -25,7 +25,7 @@ public abstract class AbstractMapService<T,ID> {
             map.entrySet().remove(object);
         }
     }
-    void deleteAll(Map<T,ID> map){
+    void deleteAll(Map<ID,T> map){
         List<ID> list = (List<ID>) map.keySet();
         list.stream().forEach(x ->map.remove(x) );
     }
