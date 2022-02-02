@@ -1,12 +1,13 @@
 package guru.springframework.sfgpetclinic.service.map;
 
+import guru.springframework.sfgpetclinic.model.BaseEntity;
 import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.util.*;
 
-public abstract class AbstractMapService<T,ID> {
+public abstract class AbstractMapService<T extends BaseEntity,ID extends Long> {
 
-    protected Map<ID,T> map = new HashMap<>();
+    protected Map<Long, T> map = new HashMap<>();
     Set<T> findAll(){
         return new HashSet(map.values());
     }
@@ -16,8 +17,19 @@ public abstract class AbstractMapService<T,ID> {
     }
 
     T save(T object,ID id){
-        map.put(id,object);
-        return object;
+
+        if (object != null){
+            if(object.getId() == null){
+                object.setId(getNextId());
+                map.put(id,object);
+            }
+
+            return object;
+        }else {
+            map.put(id,object);
+            return object;
+        }
+
     }
 
     void delete(T object){
@@ -32,5 +44,8 @@ public abstract class AbstractMapService<T,ID> {
     void deleteById(ID id){
         T object = map.get(id);
         map.remove(object);
+    }
+    private Long getNextId(){
+        return Collections.max(map.keySet()) + 1;
     }
 }
