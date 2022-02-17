@@ -2,14 +2,15 @@ package guru.springframework.sfgpetclinic.service.map;
 
 import guru.springframework.sfgpetclinic.model.Owner;
 import guru.springframework.sfgpetclinic.service.OwnerService;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
+@Profile({"default", "map"})
 public class OwnerMapService extends AbstractMapService<Owner, Long> implements OwnerService  {
     private Map<Long, Owner> map = super.map;
 
@@ -35,7 +36,7 @@ public class OwnerMapService extends AbstractMapService<Owner, Long> implements 
 
     @Override
     public Owner save(Owner owner) {
-        return super.save(owner, owner.getId());
+        return super.save(owner);
     }
 
     @Override
@@ -45,13 +46,13 @@ public class OwnerMapService extends AbstractMapService<Owner, Long> implements 
 
     @Override
     public Owner findByLastName(String name) {
-        AtomicReference<Owner> owner = null;
+        Optional<AtomicReference<Owner>> owner = Optional.empty();
         map.values().stream().forEach(x -> {
-            if (x.getLastName() == name) {
-                owner.set(x);
+            if (x.getLastName().equals(name)) {
+                owner.get().set(x);
             }
         });
-        return owner.get();
+        return owner.get().get();
     }
 
 }

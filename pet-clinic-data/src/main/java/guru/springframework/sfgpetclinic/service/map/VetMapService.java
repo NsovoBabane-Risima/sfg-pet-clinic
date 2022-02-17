@@ -2,12 +2,15 @@ package guru.springframework.sfgpetclinic.service.map;
 
 import guru.springframework.sfgpetclinic.model.Vet;
 import guru.springframework.sfgpetclinic.service.VetService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 @Service
+@Profile({"default", "map"})
 public class VetMapService extends AbstractMapService<Vet, Long> implements VetService{
     @Override
     public Vet findById(Long id) {
@@ -36,17 +39,17 @@ public class VetMapService extends AbstractMapService<Vet, Long> implements VetS
 
     @Override
     public Vet save(Vet vet) {
-        return super.save(vet, vet.getId());
+        return super.save(vet);
     }
 
     @Override
     public Vet findByLastName(String name) {
-        AtomicReference<Vet> vet = null;
+        Optional<AtomicReference<Vet>> vet = Optional.empty();
         map.values().stream().forEach(x -> {
-            if (x.getLastName() == name) {
-                vet.set(x);
+            if (x.getLastName().equals(name)) {
+                vet.get().set(x);
             }
         });
-        return vet.get();
+        return vet.get().get();
     }
 }
