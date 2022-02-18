@@ -1,6 +1,7 @@
 package guru.springframework.sfgpetclinic.bootstrap;
 
 import guru.springframework.sfgpetclinic.model.Owner;
+import guru.springframework.sfgpetclinic.model.Pet;
 import guru.springframework.sfgpetclinic.model.PetType;
 import guru.springframework.sfgpetclinic.model.Vet;
 import guru.springframework.sfgpetclinic.service.OwnerService;
@@ -8,6 +9,8 @@ import guru.springframework.sfgpetclinic.service.PetTypeService;
 import guru.springframework.sfgpetclinic.service.VetService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
 
 @Component
 public class DataLoader implements CommandLineRunner {
@@ -36,12 +39,33 @@ public class DataLoader implements CommandLineRunner {
         owner1.setId(1L);
         owner1.setFirstName("Micheal");
         owner1.setLastName("Weston");
+        owner1.setAddress("123 Bloubosrand");
+        owner1.setCity("Randburg");
+        owner1.setTelphone("0824289228");
+
+        Pet mikesPet = new Pet();
+        mikesPet.setPetType(savedDogPetType);
+        mikesPet.setOwner(owner1);
+        mikesPet.setBirthDate(LocalDate.now());
+        mikesPet.setName("Rosco");
+        owner1.getPets().add(mikesPet);
         ownerService.save(owner1);
 
         Owner owner2 = new Owner();
         owner2.setId(2L);
         owner2.setFirstName("Fiona");
         owner2.setLastName("Glenanne");
+        owner2.setAddress("123 Bloubosrand");
+        owner2.setCity("Randburg");
+        owner2.setTelphone("0824289228");
+        ;
+
+        Pet fionasCat = new Pet();
+        fionasCat.setName("Just Cat");
+        fionasCat.setOwner(owner2);
+        fionasCat.setPetType(savedCatPetType);
+        fionasCat.setBirthDate(LocalDate.now());
+        owner2.getPets().add(fionasCat);
         ownerService.save(owner2);
         System.out.println("Loaded Owners...");
 
@@ -59,6 +83,9 @@ public class DataLoader implements CommandLineRunner {
         vetService.save(vet2);
         System.out.println("Loaded Vets...");
         System.out.println(vetService.findAll().stream().count() + " Number of Vets");
+        System.out.println(petTypeService.findAll().stream().count() + " Number of Pet Types");
+        ownerService.findAll().stream().forEach(x ->
+                System.out.println( "number of pets "+ x.getFirstName() +" has : " + x.getPets().stream().count()));
 
     }
 }
