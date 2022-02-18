@@ -1,6 +1,7 @@
 package guru.springframework.sfgpetclinic.controllers;
 
 import guru.springframework.sfgpetclinic.service.OwnerService;
+import guru.springframework.sfgpetclinic.service.map.OwnerMapService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,13 +12,13 @@ public class OwnerController {
 
     private final OwnerService ownerService;
 
-    public OwnerController(OwnerService ownerService) {
+    public OwnerController(OwnerMapService ownerService) {
         this.ownerService = ownerService;
     }
 
-    @RequestMapping({"","/","index","index.html"})
-    public String listOwners(Model model){
-        model.addAttribute("owners",ownerService.findAll());
+    @RequestMapping({"", "/", "indexp", "indexp.html"})
+    public String listOwners(Model model) {
+        model.addAttribute("owners", ownerService.findAll());
         return "owners/indexp";
     }
 }
