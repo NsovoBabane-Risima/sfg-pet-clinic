@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("owners")
+@RequestMapping("/owners/find")
 public class OwnerController {
 
     private final OwnerService ownerService;
