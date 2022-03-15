@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/owners/find")
+@RequestMapping("/owners/")
 public class OwnerController {
 
     private final OwnerService ownerService;
@@ -20,5 +20,10 @@ public class OwnerController {
     public String listOwners(Model model) {
         model.addAttribute("owners", ownerService.findAll());
         return "owners/indexp";
+    }
+
+    @RequestMapping("/find")
+    public String findOwners() {
+        return "notimplemented";
     }
 }
