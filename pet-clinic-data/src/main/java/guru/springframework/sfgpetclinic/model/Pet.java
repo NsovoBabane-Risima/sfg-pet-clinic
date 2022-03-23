@@ -54,4 +54,12 @@ public class Pet extends BaseEntity {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Set<Visit> getVisits() {
+        return visits;
+    }
+
+    public void setVisits(Set<Visit> visits) {
+        this.visits = visits;
+    }
 }
