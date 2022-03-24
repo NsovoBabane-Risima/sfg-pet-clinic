@@ -1,10 +1,7 @@
 package guru.springframework.sfgpetclinic.bootstrap;
 
 import guru.springframework.sfgpetclinic.model.*;
-import guru.springframework.sfgpetclinic.service.OwnerService;
-import guru.springframework.sfgpetclinic.service.PetTypeService;
-import guru.springframework.sfgpetclinic.service.SpecialityService;
-import guru.springframework.sfgpetclinic.service.VetService;
+import guru.springframework.sfgpetclinic.service.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -16,12 +13,14 @@ public class DataLoader implements CommandLineRunner {
     private final VetService vetService;
     private final PetTypeService petTypeService;
     private final SpecialityService specialityService;
+    private final VisitService visitService;
 
-    public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService, SpecialityService specialityService) {
+    public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService, SpecialityService specialityService, VisitService visitService) {
         this.ownerService = ownerService;
         this.vetService = vetService;
         this.petTypeService = petTypeService;
         this.specialityService = specialityService;
+        this.visitService = visitService;
     }
 
     @Override
@@ -77,7 +76,6 @@ public class DataLoader implements CommandLineRunner {
         owner2.setAddress("123 Bloubosrand");
         owner2.setCity("Randburg");
         owner2.setTelphone("0824289228");
-        ;
 
         Pet fionasCat = new Pet();
         fionasCat.setName("Just Cat");
@@ -88,6 +86,11 @@ public class DataLoader implements CommandLineRunner {
         ownerService.save(owner2);
         System.out.println("Loaded Owners...");
 
+        Visit catVisit = new Visit();
+        catVisit.setDate(LocalDate.now());
+        catVisit.setPet(fionasCat);
+        catVisit.setDescription("Fiona's Cat is sick");
+        visitService.save(catVisit);
 
         Vet vet1 = new Vet();
         vet1.setId(1L);
@@ -108,6 +111,7 @@ public class DataLoader implements CommandLineRunner {
         System.out.println("Vet Specialities : " + vet1.getSpecialities().stream().toList().get(0).getDescription() + ", " + vet2.getSpecialities().stream().toList().get(0).getDescription());
         System.out.println(vetService.findAll().stream().count() + " Number of Vets");
         System.out.println(petTypeService.findAll().stream().count() + " Number of Pet Types");
+        System.out.println(" Fiona's Cat Visit : "+ catVisit.getDescription());
         ownerService.findAll().stream().forEach(x ->
                 System.out.println("number of pets " + x.getFirstName() + " has : " + x.getPets().stream().count()));
 
