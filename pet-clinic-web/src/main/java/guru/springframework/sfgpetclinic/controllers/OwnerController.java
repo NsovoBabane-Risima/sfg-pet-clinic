@@ -12,7 +12,7 @@ public class OwnerController {
 
     private final OwnerService ownerService;
 
-    public OwnerController(OwnerMapService ownerService) {
+    public OwnerController(OwnerService ownerService) {
         this.ownerService = ownerService;
     }
 
