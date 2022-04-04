@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       # specify the veresion you desire here
-      - image: circleci/openjdk:16-jdk
+      - image: cimg/openjdk:16-jdk
     working_directory: ~/repo
 
     environment:
