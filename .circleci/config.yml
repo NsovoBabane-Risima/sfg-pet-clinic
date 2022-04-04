@@ -34,6 +34,7 @@ jobs:
           paths:
             - ~/.m2
           key: my-multi-module-mvn-prj-{{ checksum "~/pom-checksum" }}
+      - run: mvn package
       - run:
           name: Build
           command: mvn -B -DskipTests clean package install
