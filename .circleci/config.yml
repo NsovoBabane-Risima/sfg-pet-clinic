@@ -1,49 +1,29 @@
 version: 2
 jobs:
-  build:
-    working_directory: ~/my-multi-module-mvn-prj
-
+  maven/test:
     docker:
-      - image: circleci/openjdk:8-jdk-stretch
-
+      - image: circleci/openjdk:8-jdk-node
     steps:
       - checkout
-
       - run:
-          name: Generate cumulative pom.xml checksum
-          command: |
-            find . -type f -name "pom.xml" -exec sh -c "sha256sum {} >> ~/pom-checksum.tmp" \;
-            sort -o ~/pom-checksum ~/pom-checksum.tmp
-          when: always
-
+          name: Generate Cache Checksum
+          command: find . -name 'pom.xml' | sort | xargs cat > /tmp/maven_cache_seed
       - restore_cache:
-          keys:
-            - my-multi-module-mvn-prj-{{ checksum "~/pom-checksum" }}
-            - my-multi-module-mvn-prj-
-
-      - run: mvn de.qaware.maven:go-offline-maven-plugin:resolve-dependencies
-
+          key: maven-{{ checksum "/tmp/maven_cache_seed" }}
+      - run:
+          name: Install Dependencies
+          command: mvn -DskipTests clean install dependency:resolve-plugins dependency:go-offline
+      - run:
+          name: Run Tests
+          command: mvn verify
       - save_cache:
           paths:
             - ~/.m2
-          key: my-multi-module-mvn-prj-{{ checksum "~/pom-checksum" }}
-
-      - run: mvn package
-
-      - run:
-          name: Save test results
-          command: |
-            mkdir -p ~/test-results/junit/
-            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
-          when: always      # Then run your tests!
-      - run:
-          name: Test
-          command: mvn integration-test
-
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
-#workflows:
-#  sample: # This is the name of the workflow, feel free to change it to better match your workflow.
-#    # Inside the workflow, you define the jobs you want to run.
-#    jobs:
-#      - build-and-test
+          key: maven-{{ checksum "/tmp/maven_cache_seed" }}
+      - store_test_results:
+          path: target/surefire-reports
+workflows:
+  maven_test:
+    jobs:
+      - maven/test
+  version: 2
