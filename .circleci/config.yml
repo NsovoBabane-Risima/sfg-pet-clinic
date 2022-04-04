@@ -25,7 +25,15 @@ jobs:
             find . -type f -name "pom.xml" -exec sh -c "sha256sum {} >> ~/pom-checksum.tmp" \;
             sort -o ~/pom-checksum ~/pom-checksum.tmp
           when: always
-
+      - restore_cache:
+          keys:
+            - my-multi-module-mvn-prj-{{ checksum "~/pom-checksum" }}
+            - my-multi-module-mvn-prj-
+      - run: mvn de.qaware.maven:go-offline-maven-plugin:resolve-dependencies
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: my-multi-module-mvn-prj-{{ checksum "~/pom-checksum" }}
       - run:
           name: Build
           command: mvn -B -DskipTests clean package install
