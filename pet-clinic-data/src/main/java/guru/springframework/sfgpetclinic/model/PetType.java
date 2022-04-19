@@ -20,4 +20,9 @@ public class PetType extends BaseEntity {
     String name;
     @OneToMany
     Set<Pet> pets = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return  name;
+    }
 }
